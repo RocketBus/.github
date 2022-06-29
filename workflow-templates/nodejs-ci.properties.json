@@ -1,0 +1,13 @@
+{
+    "name": "Clickbus Node.js Workflow",
+    "description": "Clickbus Node.js CI starter workflow.",
+    "iconName": "nodejs",
+    "categories": [
+        "Javascript"
+    ],
+    "filePatterns": [
+        "package.json$",
+        "^Dockerfile",
+        ".*\\.md$"
+    ]
+}

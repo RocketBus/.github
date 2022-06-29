@@ -1,0 +1,53 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+env:
+  UNIT_TESTS_DISABLED: false
+  INTEGRATION_TESTS_DISABLED: false
+  E2E_TESTS_DISABLED: false
+  SONARQUBE_SCANNING_DISABLED: false
+  IMAGE_SCANNING_DISABLED: false
+
+jobs:
+  build:
+    name: Node.js
+    uses: RocketBus/workflows-templates/.github/workflows/nodejs/build.yaml@main
+  build_image:
+    name: Docker
+    uses: RocketBus/workflows-templates/.github/workflows/docker/build.yaml@main
+    secrets:
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    needs:
+  test:
+    name: Node.js
+    uses: RocketBus/workflows-templates/.github/workflows/nodejs/test.yaml@main
+    with:
+      unit_tests_disabled: ${{ env.UNIT_TESTS_DISABLED }}
+      integration_tests_disabled: ${{ env.INTEGRATION_TESTS_DISABLED }}
+      e2e_tests_disabled: ${{ env.E2E_TESTS_DISABLED }}
+  security:
+    name: Security
+    uses: RocketBus/workflows-templates/.github/workflows/security.yaml@main
+    needs:
+      - build
+      - test
+    with:
+      language: ${{ needs.test.outputs.language }}
+      sonarqube_scanning_disabled: ${{ env.SONARQUBE_SCANNING_DISABLED }}
+      image_scanning_disabled: ${{ env.IMAGE_SCANNING_DISABLED }}
+  publish:
+    name: Docker
+    uses: RocketBus/workflows-templates/.github/workflows/docker/push.yaml@main
+    needs:
+      - build
+      - test
+      - security
+    secrets:
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

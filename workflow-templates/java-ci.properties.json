@@ -1,0 +1,13 @@
+{
+    "name": "Clickbus Java Workflow",
+    "description": "Clickbus Java CI starter workflow.",
+    "iconName": "java",
+    "categories": [
+        "Java"
+    ],
+    "filePatterns": [
+        "pom.xml$",
+        "^Dockerfile",
+        ".*\\.md$"
+    ]
+}

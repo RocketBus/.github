@@ -1,0 +1,13 @@
+{
+    "name": "Clickbus PHP Workflow",
+    "description": "Clickbus PHP CI starter workflow.",
+    "iconName": "php",
+    "categories": [
+        "PHP"
+    ],
+    "filePatterns": [
+        "composer.json$",
+        "^Dockerfile",
+        ".*\\.md$"
+    ]
+}
